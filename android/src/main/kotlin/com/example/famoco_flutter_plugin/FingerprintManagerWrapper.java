@@ -3,7 +3,7 @@ package com.example.famoco_flutter_plugin;
 import static com.morpho.morphosmart.sdk.CompressionAlgorithm.MORPHO_NO_COMPRESS;
 import static com.morpho.morphosmart.sdk.TemplateFVPType.MORPHO_NO_PK_FVP;
 
-import android.os.Handler;
+import android.util.Log;
 
 import com.example.famoco_flutter_plugin.utils.ProcessInfo;
 import com.morpho.morphosmart.sdk.Coder;
@@ -30,20 +30,30 @@ public class FingerprintManagerWrapper {
     private final LatentDetection LATENT_DETECTION = LatentDetection.LATENT_DETECT_ENABLE;
     private final int NB_FINGER = 1;
 
+    MorphoDevice morphoDevice;
+
+
+    public void createMorphoDevice() {
+        try {
+            morphoDevice = new MorphoDevice();
+
+        } catch (Exception e) {
+            Log.d("FingerprintManagerWra", e.getMessage());
+        }
+        ProcessInfo.getInstance().setMorphoDevice(this.morphoDevice);
+
+    }
+
     @Nullable
     public int readFingerprintData() {
-        MorphoDevice morphoDevice = new MorphoDevice();
-
+        createMorphoDevice();
 
         TemplateList templateList = new TemplateList();
 
-
         ProcessInfo processInfo = ProcessInfo.getInstance();
         final int timeout = processInfo.getTimeout();
-        int acquisitionThreshold = (processInfo.isFingerprintQualityThreshold()) ?
-                processInfo.getFingerprintQualityThresholdvalue() : 0;
-        int advancedSecurityLevelsRequired = (processInfo.isAdvancedSecLevCompReq()) ?
-                1 : 0xFF;
+        int acquisitionThreshold = (processInfo.isFingerprintQualityThreshold()) ? processInfo.getFingerprintQualityThresholdvalue() : 0;
+        int advancedSecurityLevelsRequired = (processInfo.isAdvancedSecLevCompReq()) ? 1 : 0xFF;
 
         int callbackCmd = processInfo.getCallbackCmd();
         Coder coderChoice = processInfo.getCoder();
@@ -59,11 +69,7 @@ public class FingerprintManagerWrapper {
 
             final Observer observer = null;
 
-            ret = morphoDevice.capture(timeout, acquisitionThreshold, advancedSecurityLevelsRequired,
-                    NB_FINGER,
-                    TEMPLATE_TYPE, TEMPLATE_FVP_TYPE, MAX_SIZE_TEMPLATE, ENROLL_TYPE,
-                    LATENT_DETECTION, coderChoice, detectModeChoice,
-                    MORPHO_NO_COMPRESS, 0, templateList, callbackCmd, observer);
+            ret = morphoDevice.capture(timeout, acquisitionThreshold, advancedSecurityLevelsRequired, NB_FINGER, TEMPLATE_TYPE, TEMPLATE_FVP_TYPE, MAX_SIZE_TEMPLATE, ENROLL_TYPE, LATENT_DETECTION, coderChoice, detectModeChoice, MORPHO_NO_COMPRESS, 0, templateList, callbackCmd, observer);
         }
 
         if (ret == ErrorCodes.MORPHO_OK) {

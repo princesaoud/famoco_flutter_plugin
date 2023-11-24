@@ -20,6 +20,8 @@ class FamocoFlutterPlugin : FlutterPlugin, MethodCallHandler {
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "famoco_flutter_plugin")
         channel.setMethodCallHandler(this)
+        fingerPrintManagerWrapper = FingerprintManagerWrapper()
+
     }
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {

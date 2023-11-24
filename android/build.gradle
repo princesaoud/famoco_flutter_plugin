@@ -39,10 +39,18 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
         test.java.srcDirs += 'src/test/kotlin'
+        main {
+            // Specify the source directory for native libraries
+            jniLibs.srcDirs += ['src/main/jniLibs']
+        }
+
     }
 
     defaultConfig {
         minSdkVersion 16
+        ndk {
+            abiFilters 'armeabi-v7a', 'x86', 'armeabi', 'arm64-v8a'
+        }
     }
 
     dependencies {
@@ -65,10 +73,13 @@ android {
     lintOptions {
         checkReleaseBuilds false
     }
+
+
 }
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
+//    fileTree(dir: 'libs', include: '**/*.so').
+//    implementation fileTree(dir: 'libs', include: ['.jar','.so'])
     implementation 'androidx.annotation:annotation:1.4.0'
     implementation files('libs/famoco-sdk.jar')
 }
