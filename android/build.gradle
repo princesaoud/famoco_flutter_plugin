@@ -78,8 +78,7 @@ android {
 }
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-//    fileTree(dir: 'libs', include: '**/*.so').
-//    implementation fileTree(dir: 'libs', include: ['.jar','.so'])
+    implementation fileTree(include: ['*.arr'], dir: 'libs')
     implementation 'androidx.annotation:annotation:1.4.0'
-    implementation files('libs/famoco-sdk.jar')
+//    implementation files('libs/famoco-sdk.jar')
 }
